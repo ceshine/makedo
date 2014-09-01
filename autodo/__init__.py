@@ -14,7 +14,11 @@ class AutoDO:
             return True
         else:
             raise RuntimeError("Snapshot failed.")
-            
+
+    def destroy(self, droplet_name):
+        droplet = self._client.droplets.by_name(droplet_name)
+        return droplet.delete()
+        
     def snapshot_and_destroy(self, droplet_name, snapshot_name):
         # Raise KeyError if can't find a droplet by name
         droplet = self._client.droplets.by_name(droplet_name)
@@ -37,7 +41,7 @@ class AutoDO:
                 key = self.find_ssh_key(name)
                 if key is None:
                     raise NameError("Cannot find ssh key named " + name)
-                keys.append(key)
+                keys.append(key['id'])
             ssh_keys = keys
         return self._client.droplets.create(droplet_name, region, size,
                                      image, ssh_keys=ssh_keys)
