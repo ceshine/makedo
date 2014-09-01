@@ -10,7 +10,7 @@ class AutoDO:
         # TODO: check if the snapshot name already exists?
         droplet.take_snapshot(snapshot_name)
         print "Creating snapshot..."
-        if snapshot_name in droplet.snapshots():
+        if snapshot_name in [x['name'] for x in droplet.snapshots()]:
             return True
         else:
             raise RuntimeError("Snapshot failed.")
@@ -22,7 +22,7 @@ class AutoDO:
     def snapshot_and_destroy(self, droplet_name, snapshot_name):
         # Raise KeyError if can't find a droplet by name
         droplet = self._client.droplets.by_name(droplet_name)
-        self._snapshot(droplet)
+        self._snapshot(droplet, snapshot_name)
         return droplet.delete()
 
     def find_snapshot(self, snapshot_name):
