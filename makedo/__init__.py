@@ -28,7 +28,19 @@ def create(droplet_name, snapshot_name, region, size, ssh_key):
                                       snapshot_name, ssh_key=[ssh_key], size=size)
     click.echo("Droplet created.")
 
+    
+@cli.command()
+@click.argument('droplet_name')
+@click.option('--snapshot', help="The name of the snapshot " \
+              "if you want to make a snapshot before destroying the droplet")
+def destroy(droplet_name, snapshot):
+    """(Optionally) create a snapshot and destroy a droplet"""
+    if snapshot:
+        core.snapshot_and_destroy(droplet_name, snapshot_name)
+    else:
+        core.destroy(droplet_name)
 
+        
 @click.group()
 def list():
     """List resources/configurations available on the DigitalOcean account"""
@@ -37,16 +49,19 @@ def list():
 
 @list.command()
 def keys():
+    """List ssh keys"""
     click.echo(pprint.pformat(core.list_ssh_keys()))
 
 
 @list.command()
 def sizes():
+    """List usable sizes of droplets"""
     click.echo(pprint.pformat(core.list_sizes()))
 
 
 @list.command()
 def snapshots():
+    """List snapshots/private images"""
     click.echo(pprint.pformat(core.list_snapshots()))
 
 cli.add_command(list)
