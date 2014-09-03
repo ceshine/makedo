@@ -32,7 +32,7 @@ class Core:
             if snapshot['name'] == snapshot_name:
                 return snapshot['id']
         
-    def create_droplete_from_snapshot(self, droplet_name, region,
+    def create_droplet_from_snapshot(self, droplet_name, region,
                                       snapshot_name, ssh_keys=None, size="512mb"):
         image = self.find_snapshot(snapshot_name)
         if ssh_keys is not None:

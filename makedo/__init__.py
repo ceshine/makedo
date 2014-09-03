@@ -25,7 +25,7 @@ def create(droplet_name, snapshot_name, region, size, ssh_key):
     # TODO: Accept a list of the names of ssh-keys
     click.echo("Creating the droplet...")
     core.create_droplet_from_snapshot(droplet_name, region,
-                                      snapshot_name, ssh_key=[ssh_key], size=size)
+                                      snapshot_name, ssh_keys=[ssh_key], size=size)
     click.echo("Droplet created.")
 
     
@@ -36,7 +36,7 @@ def create(droplet_name, snapshot_name, region, size, ssh_key):
 def destroy(droplet_name, snapshot):
     """(Optionally) create a snapshot and destroy a droplet"""
     if snapshot:
-        core.snapshot_and_destroy(droplet_name, snapshot_name)
+        core.snapshot_and_destroy(droplet_name, snapshot)
     else:
         core.destroy(droplet_name)
 
