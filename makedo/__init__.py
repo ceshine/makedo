@@ -27,9 +27,10 @@ def create(droplet_name, snapshot_name, region, size, ssh_key):
     """Create a droplet from a snapshot."""
     # TODO: Accept a list of the names of ssh-keys
     click.echo("Creating the droplet...")
-    core.create_droplet_from_snapshot(droplet_name, region,
+    droplet = core.create_droplet_from_snapshot(droplet_name, region,
                                       snapshot_name, ssh_keys=[ssh_key], size=size)
     click.echo("Droplet created.")
+    click.echo("Droplet IP: " + droplet.ip_address) 
 
     
 @cli.command()
@@ -56,9 +57,9 @@ def snapshot(snapshot_name):
     """Remove a snapshot from the account"""
     response = core.remove_snapshot(snapshot_name)
     if response is not None:
-        print "Snapshot removed!"
+        click.echo("Snapshot removed!")
     else:
-        print "Failed to remove the snapshot!"
+        click.echo("Failed to remove the snapshot!")
 
                 
 @click.group()
