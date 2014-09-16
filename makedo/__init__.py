@@ -9,7 +9,10 @@ core = None
 @click.group()
 @click.option('--verbose', is_flag=True)
 def cli(verbose):
-    """Command line interface for DigitalOcean"""
+    """
+    Command line interface for DigitalOcean. \n
+    Important: Provide the API key in environment variable DIGITALOCEAN_API_KEY
+    """
     global core
     core = Core()
 
@@ -40,7 +43,24 @@ def destroy(droplet_name, snapshot):
     else:
         core.destroy(droplet_name)
 
-        
+
+@click.group()
+def remove():
+    """Remove snapshots or ssh keys"""
+    pass
+
+
+@remove.command()
+@click.argument('snapshot_name')
+def snapshot(snapshot_name):
+    """Remove a snapshot from the account"""
+    response = core.remove_snapshot(snapshot_name)
+    if response is not None:
+        print "Snapshot removed!"
+    else:
+        print "Failed to remove the snapshot!"
+
+                
 @click.group()
 def list():
     """List resources/configurations available on the DigitalOcean account"""
@@ -64,4 +84,6 @@ def snapshots():
     """List snapshots/private images"""
     click.echo(pprint.pformat(core.list_snapshots()))
 
+    
 cli.add_command(list)
+cli.add_command(remove)

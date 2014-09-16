@@ -18,6 +18,18 @@ class Core:
     def destroy(self, droplet_name):
         droplet = self._client.droplets.by_name(droplet_name)
         return droplet.delete()
+
+    def remove_snapshot(self, snapshot_name):
+        snapshot = self.find_snapshot(snapshot_name)
+        while True:
+            check = raw_input("Are you sure you want to delete snapshot %s?(yes/no)" % snapshot_name)
+            if check != "yes" and check != "no":
+                print "Please answer 'yes' or 'no'."
+            elif check == "yes":
+                return self._client.images.delete(snapshot['id'])
+            else:
+                return False
+            
         
     def snapshot_and_destroy(self, droplet_name, snapshot_name):
         # Raise KeyError if can't find a droplet by name
@@ -30,11 +42,12 @@ class Core:
         # Doesn't get implemented in poseidon
         for snapshot in self.list_snapshots():
             if snapshot['name'] == snapshot_name:
-                return snapshot['id']
+                return snapshot
+        raise ValueError("Snapshot not found.")
         
     def create_droplet_from_snapshot(self, droplet_name, region,
                                       snapshot_name, ssh_keys=None, size="512mb"):
-        image = self.find_snapshot(snapshot_name)
+        image = self.find_snapshot(snapshot_name)['id']
         if ssh_keys is not None:
             keys = []
             for name in ssh_keys:
