@@ -27,8 +27,12 @@ def create(droplet_name, snapshot_name, region, size, ssh_key):
     """Create a droplet from a snapshot."""
     # TODO: Accept a list of the names of ssh-keys
     click.echo("Creating the droplet...")
+    if ssh_key is not None:
+        ssh_keys = [ssh_key]
+    else:
+        ssh_keys = None
     droplet = core.create_droplet_from_snapshot(droplet_name, region,
-                                      snapshot_name, ssh_keys=[ssh_key], size=size)
+                                      snapshot_name, ssh_keys=ssh_keys, size=size)
     click.echo("Droplet created.")
     click.echo("Droplet IP: " + droplet.ip_address) 
 
